@@ -14,8 +14,8 @@ from flask_talisman import Talisman
 app = Flask(__name__)
 app.config.from_object(config)
 
-#Create instance of Talisman class
-#For security headers
+# Create instance of Talisman class
+# For security headers
 talisman = Talisman(app)
 
 # Import the routes After the Flask app is created
