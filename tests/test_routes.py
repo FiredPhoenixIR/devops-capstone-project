@@ -33,9 +33,10 @@ class TestAccountService(TestCase):
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        talisman.force_https = False # To Disable HTTPS Force for all tests
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
-        talisman.force_https = False
+        
 
     @classmethod
     def tearDownClass(cls):
