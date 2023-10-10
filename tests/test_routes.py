@@ -24,6 +24,8 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
+
+
 class TestAccountService(TestCase):
     """Account Service Tests"""
 
@@ -33,10 +35,10 @@ class TestAccountService(TestCase):
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        talisman.force_https = False # To Disable HTTPS Force for all tests
+        #  To Disable HTTPS Force for all tests
+        talisman.force_https = False   
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
-        
 
     @classmethod
     def tearDownClass(cls):
@@ -174,11 +176,10 @@ class TestAccountService(TestCase):
         """It should not allow an illegal method call"""
         resp = self.client.delete(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     def test_https(self):
         """ Header should be HTTPS """
-        environ_overrides=HTTPS_ENVIRON
-        resp = self.client.get("/",environ_overrides=HTTPS_ENVIRON)
+        resp = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         headers = resp.headers
         # Perform assertions on the response
         self.assertEqual(resp.status_code, 200)
@@ -186,9 +187,6 @@ class TestAccountService(TestCase):
         # Check for specific security headers and their values
         self.assertIn('X-Frame-Options', headers)
         self.assertEqual(headers['X-Frame-Options'], 'SAMEORIGIN')
-
-        #self.assertIn('X-XSS-Protection', headers)
-        #self.assertEqual(headers['X-XSS-Protection'], '1; mode=block')
 
         self.assertIn('X-Content-Type-Options', headers)
         self.assertEqual(headers['X-Content-Type-Options'], 'nosniff')
@@ -201,9 +199,7 @@ class TestAccountService(TestCase):
 
     def test_cors_security(self):
         """ Header should contain CORS Security """
-        environ_overrides=HTTPS_ENVIRON
-        resp = self.client.get("/",environ_overrides=HTTPS_ENVIRON)
-        headers = resp.headers
+        resp = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         # Perform assertions on the response
         self.assertEqual(resp.status_code, 200)
         # Check for the CORS header
